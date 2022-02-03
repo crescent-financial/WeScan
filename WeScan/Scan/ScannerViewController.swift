@@ -115,6 +115,16 @@ public final class ScannerViewController: UIViewController {
         }
     }
     
+    override public func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        if self.navigationController?.isBeingDismissed == true
+        {
+            guard let imageScannerController = navigationController as? ImageScannerController else { return }
+            imageScannerController.imageScannerDelegate?.imageScannerControllerDidCancel(imageScannerController)
+        }
+    }
+    
     // MARK: - Setups
     
     private func setupViews() {
@@ -268,7 +278,6 @@ public final class ScannerViewController: UIViewController {
         guard let imageScannerController = navigationController as? ImageScannerController else { return }
         imageScannerController.imageScannerDelegate?.imageScannerControllerDidCancel(imageScannerController)
     }
-    
 }
 
 extension ScannerViewController: RectangleDetectionDelegateProtocol {

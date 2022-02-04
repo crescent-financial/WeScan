@@ -115,6 +115,16 @@ final class EditScanViewController: UIViewController {
         navigationController?.navigationBar.tintAdjustmentMode = .automatic
     }
     
+    override public func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        if self.navigationController?.isBeingDismissed == true
+        {
+            guard let imageScannerController = navigationController as? ImageScannerController else { return }
+            imageScannerController.imageScannerDelegate?.imageScannerControllerDidCancel(imageScannerController)
+        }
+    }
+    
     // MARK: - Setups
     
     private func setupViews() {

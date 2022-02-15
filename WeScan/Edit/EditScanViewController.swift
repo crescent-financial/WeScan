@@ -175,6 +175,48 @@ final class EditScanViewController: UIViewController {
         imageScannerController.imageScannerDelegate?.imageScannerController(imageScannerController, didFinishScanningWithResults: results)
     }
 
+    fileprivate func addMargin(_ quad: inout Quadrilateral, margin: CGFloat) {
+        if (quad.topLeft.x < margin)
+        { quad.topLeft.x = 0.0 }
+        else
+        { quad.topLeft.x -= margin }
+        
+        if (quad.topLeft.y < margin)
+        { quad.topLeft.y = 0.0 }
+        else
+        { quad.topLeft.y -= margin }
+        
+        if (quad.topRight.x + margin > quadView.bounds.width)
+        { quad.topRight.x = quadView.bounds.width }
+        else
+        { quad.topRight.x += margin }
+        
+        if (quad.topRight.y < margin)
+        { quad.topRight.y = 0.0 }
+        else
+        { quad.topRight.y -= margin }
+        
+        if (quad.bottomLeft.x < margin)
+        { quad.bottomLeft.x = 0.0 }
+        else
+        { quad.bottomLeft.x -= margin }
+        
+        if (quad.bottomLeft.y > quadView.bounds.height)
+        { quad.bottomLeft.y = quadView.bounds.height }
+        else
+        { quad.bottomLeft.y += margin }
+        
+        if (quad.bottomRight.x + margin > quadView.bounds.width)
+        { quad.bottomRight.x = quadView.bounds.width }
+        else
+        { quad.bottomRight.x += margin }
+        
+        if (quad.bottomRight.y + margin > quadView.bounds.height)
+        { quad.bottomRight.y = quadView.bounds.height }
+        else
+        { quad.bottomRight.y += margin }
+    }
+    
     private func prepareImageResults() -> ImageScannerResults? {
         guard var quad = quadView.quad,
             let ciImage = CIImage(image: image) else {
@@ -188,46 +230,7 @@ final class EditScanViewController: UIViewController {
         
         quad.reorganize()
         
-        if (quad.topLeft.x < 10.0)
-        { quad.topLeft.x = 0.0 }
-        else
-        { quad.topLeft.x -= 10.0 }
-        
-        if (quad.topLeft.y < 10.0)
-        { quad.topLeft.y = 0.0 }
-        else
-        { quad.topLeft.y -= 10.0 }
-        
-        if (quad.topRight.x + 10 > quadView.bounds.width)
-        { quad.topRight.x = quadView.bounds.width }
-        else
-        { quad.topRight.x += 10.0 }
-        
-        if (quad.topRight.y < 10)
-        { quad.topRight.y = 0.0 }
-        else
-        { quad.topRight.y -= 10.0 }
-        
-        if (quad.bottomLeft.x < 10)
-        { quad.bottomLeft.x = 0.0 }
-        else
-        { quad.bottomLeft.x -= 10.0 }
-        
-        if (quad.bottomLeft.y > quadView.bounds.height)
-        { quad.bottomLeft.y = quadView.bounds.height }
-        else
-        { quad.bottomLeft.y += 10.0 }
-        
-        if (quad.bottomRight.x + 10 > quadView.bounds.width)
-        { quad.bottomRight.x = quadView.bounds.width }
-        else
-        { quad.bottomRight.x += 10.0 }
-
-        if (quad.bottomRight.y + 10 > quadView.bounds.height)
-        { quad.bottomRight.y = quadView.bounds.height }
-        else
-        { quad.bottomRight.y += 10.0 }
-
+        addMargin(&quad, margin: 10.0)
 
         let orientedImage = ciImage.oriented(forExifOrientation: Int32(cgOrientation.rawValue))
         let scaledQuad = quad.scale(quadView.bounds.size, image.size)

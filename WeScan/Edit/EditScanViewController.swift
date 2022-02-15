@@ -176,7 +176,7 @@ final class EditScanViewController: UIViewController {
     }
 
     private func prepareImageResults() -> ImageScannerResults? {
-        guard let quad = quadView.quad,
+        guard var quad = quadView.quad,
             let ciImage = CIImage(image: image) else {
                 if let imageScannerController = navigationController as? ImageScannerController {
                     let error = ImageScannerControllerError.ciImageCreation
@@ -185,6 +185,48 @@ final class EditScanViewController: UIViewController {
                 return nil
         }
         let cgOrientation = CGImagePropertyOrientation(image.imageOrientation)
+        
+        if (quad.topLeft.x < 10.0)
+        { quad.topLeft.x = 0.0 }
+        else
+        { quad.topLeft.x -= 10.0 }
+        
+        if (quad.topLeft.y < 10.0)
+        { quad.topLeft.y = 0.0 }
+        else
+        { quad.topLeft.y -= 10.0 }
+        
+        if (quad.topRight.x + 10 > quadView.bounds.width)
+        { quad.topRight.x = quadView.bounds.width }
+        else
+        { quad.topRight.x += 10.0 }
+        
+        if (quad.topRight.y < 10)
+        { quad.topRight.y = 0.0 }
+        else
+        { quad.topRight.y -= 10.0 }
+        
+        if (quad.bottomLeft.x < 10)
+        { quad.bottomLeft.x = 0.0 }
+        else
+        { quad.bottomLeft.x -= 10.0 }
+        
+        if (quad.bottomLeft.y > quadView.bounds.height)
+        { quad.bottomLeft.y = quadView.bounds.height }
+        else
+        { quad.bottomLeft.y += 10.0 }
+        
+        if (quad.bottomRight.x + 10 > quadView.bounds.width)
+        { quad.bottomRight.x = quadView.bounds.width }
+        else
+        { quad.bottomRight.x += 10.0 }
+
+        if (quad.bottomRight.y + 10 > quadView.bounds.height)
+        { quad.bottomRight.y = quadView.bounds.height }
+        else
+        { quad.bottomRight.y += 10.0 }
+
+
         let orientedImage = ciImage.oriented(forExifOrientation: Int32(cgOrientation.rawValue))
         let scaledQuad = quad.scale(quadView.bounds.size, image.size)
         self.quad = scaledQuad

@@ -186,6 +186,8 @@ final class EditScanViewController: UIViewController {
         }
         let cgOrientation = CGImagePropertyOrientation(image.imageOrientation)
         
+        quad.reorganize()
+        
         if (quad.topLeft.x < 10.0)
         { quad.topLeft.x = 0.0 }
         else
